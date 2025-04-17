@@ -3,53 +3,43 @@ package org.scoula.lib;
 import java.util.Scanner;
 
 public class Input {
-    static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
-    public String read(String title){
+    public static String read(String title) {
         System.out.print(title);
-        return scanner.next();
+        return scanner.nextLine();
     }
 
-    public String read(String title, String defaultValue) {
-        System.out.print(title + "(" + defaultValue + ")");
-        String userInput = scanner.next();
-        if(userInput == null){
-            return defaultValue;
-        }
-        return userInput;
+    public static String read(String title, String defaultValue) {
+        System.out.print(title + "(" + defaultValue + "): ");
+        String input = scanner.nextLine();
+        return input.isEmpty() ? defaultValue : input;
     }
 
-    public int readInt(String title) {
+    public static int readInt(String title) {
         System.out.print(title);
-        return scanner.nextInt();
-    }
-
-    public boolean confirm(String title, boolean defaultValue) {
-        System.out.println("종료할까요? ");
-        if(defaultValue) {
-            System.out.println("(Y/n): ");
-        } else {
-            System.out.println("(y/N): ");
-        }
-        String userInput = scanner.next();
-        if(userInput == null){
-            return defaultValue;
-        }
-        if(defaultValue) {
-            if(userInput.equalsIgnoreCase("Y")) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if(userInput.equalsIgnoreCase("N")) {
-                return false;
-            } else {
-                return true;
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("정수를 입력하세요: ");
             }
         }
     }
-    public boolean confirm(String title) {
-        return confirm(title, false);
+
+    public static boolean confirm(String title, boolean defaultValue) {
+        String option = defaultValue ? "(Y/n): " : "(y/N): ";
+        System.out.print(title + " " + option);
+        String input = scanner.nextLine().trim().toLowerCase();
+
+        if (input.isEmpty()) {
+            return defaultValue;
+        }
+        return input.startsWith("y");
+    }
+
+    // 5. boolean confirm(String title)
+    public static boolean confirm(String title) {
+        return confirm(title, true);
     }
 }
